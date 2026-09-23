@@ -1,0 +1,154 @@
+{
+  "tables": [
+    {
+      "table_name": "stg_monthly_budget",
+      "dataset": "stg_procurement",
+      "description": "Menyimpan data alokasi anggaran bulanan per departemen dan COA.",
+      "columns": [
+        {
+          "name": "Date",
+          "type": "DATE",
+          "description": "Tanggal pencatatan budget"
+        },
+        {
+          "name": "Tahun",
+          "type": "INTEGER",
+          "description": "Tahun periode budget"
+        },
+        {
+          "name": "Bulan",
+          "type": "INTEGER",
+          "description": "Bulan periode budget"
+        },
+        {
+          "name": "Departemen",
+          "type": "STRING",
+          "description": "Nama departemen"
+        },
+        {
+          "name": "COA",
+          "type": "STRING",
+          "description": "Chart of Accounts / Kode akun budget"
+        },
+        {
+          "name": "Jumlah_Budget",
+          "type": "NUMERIC",
+          "description": "Nilai nominal budget yang sudah dibersihkan menjadi angka"
+        }
+      ]
+    },
+    {
+      "table_name": "mrt_compile_v04",
+      "dataset": "mrt_procurement",
+      "description": "Menyimpan rincian transaksi pengeluaran dan pembelian aktual harian/bulanan.",
+      "columns": [
+        {
+          "name": "No_Transaksi",
+          "type": "STRING",
+          "description": "Nomor unik transaksi pembelian"
+        },
+        {
+          "name": "Departemen",
+          "type": "STRING",
+          "description": "Nama departemen yang melakukan transaksi"
+        },
+        {
+          "name": "Nama_Pengaju",
+          "type": "STRING",
+          "description": "Nama staf/karyawan yang mengajukan pembelian"
+        },
+        {
+          "name": "Kode_MRP",
+          "type": "STRING",
+          "description": "Kode acuan Material Requirement Planning"
+        },
+        {
+          "name": "Barang_Pengajuan",
+          "type": "STRING",
+          "description": "Nama barang atau layanan yang dibeli"
+        },
+        {
+          "name": "Spesifikasi_Barang",
+          "type": "STRING",
+          "description": "Detail spesifikasi dari barang terkait"
+        },
+        {
+          "name": "Product_List",
+          "type": "STRING",
+          "description": "Kategori atau referensi produk di sistem"
+        },
+        {
+          "name": "Quantity",
+          "type": "FLOAT",
+          "description": "Jumlah/kuantitas barang yang dibeli"
+        },
+        {
+          "name": "UoM",
+          "type": "STRING",
+          "description": "Unit of Measurement (Satuan ukur barang)"
+        },
+        {
+          "name": "Persetujuan_MR",
+          "type": "STRING",
+          "description": "Status persetujuan Material Request"
+        },
+        {
+          "name": "Tanggal_Persetujuan",
+          "type": "DATE",
+          "description": "Tanggal dokumen MR disetujui"
+        },
+        {
+          "name": "Pilihan_Supplier",
+          "type": "STRING",
+          "description": "Nama vendor atau supplier yang dipilih"
+        },
+        {
+          "name": "Harga_Database",
+          "type": "FLOAT",
+          "description": "Harga referensi barang dari database"
+        },
+        {
+          "name": "Harga_Aktual",
+          "type": "FLOAT",
+          "description": "Harga aktual barang saat transaksi dilakukan"
+        },
+        {
+          "name": "Tanggal_Pembelian",
+          "type": "DATE",
+          "description": "Tanggal terjadinya transaksi pengeluaran/pembelian"
+        },
+        {
+          "name": "Lead_Time",
+          "type": "FLOAT",
+          "description": "Waktu tunggu (lead time) pengiriman barang"
+        },
+        {
+          "name": "No_BBK",
+          "type": "STRING",
+          "description": "Nomor Bukti Barang Keluar terkait pengajuan"
+        },
+        {
+          "name": "COA",
+          "type": "STRING",
+          "description": "Chart of Accounts / Kode Akun pengeluaran"
+        },
+        {
+          "name": "Rekap_Nota",
+          "type": "STRING",
+          "description": "Nomor referensi atau kode rekap nota transaksi"
+        }
+      ]
+    }
+  ],
+  "business_rules": [
+    "Realisasi pembelian dihitung dari SUM(Harga_Aktual) pada tabel mrt_compile_v04.",
+    "Sisa budget (Variance) = Jumlah_Budget (dari stg_monthly_budget) - SUM(Harga_Aktual) (dari mrt_compile_v04).",
+    "Persentase realisasi (%) = (SUM(Harga_Aktual) / Jumlah_Budget) * 100.",
+    "Gunakan kolom 'Tanggal_Pembelian' pada mrt_compile_v04 sebagai referensi utama untuk seluruh filter dan perbandingan periode waktu transaksi (misal: bulan, tahun, kuartal, rentang tanggal).",
+    "Relasi antara tabel budget dan tabel transaksi aktual dilakukan melalui kesamaan pada kolom 'Departemen' dan 'COA'.",
+    "Jika user menyebutkan nama divisi seperti Mirror, IT, HR, Finance, Purchasing, Produksi, Maintenance, dsb., selalu filter pada kolom 'Departemen' (bukan pada Barang_Pengajuan).",
+    "Untuk pertanyaan perbandingan antar dua kuartal atau periode (misal: Q2 vs Q1), hasilkan query SQL dengan kolom terpisah untuk masing-masing periode (misal: Total_Q2, Total_Q1, Selisih) agar chart otomatis menampilkan perbandingan dua batang berdampingan (grouped bar chart).",
+    "Semua nilai mata uang (Jumlah_Budget, Harga_Aktual) menggunakan mata uang Rupiah (IDR).",
+    "Gunakan fungsi agregasi seperti SUM(), AVG(), dan COUNT() secara akurat berdasarkan rentang waktu atau pengelompokan departemen/COA."
+  ]
+}

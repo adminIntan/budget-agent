@@ -1,0 +1,10 @@
+.env
+env.yaml
+*.json
+!sample_data/schema_definition.json
+!eval/benchmark_dataset.json
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/

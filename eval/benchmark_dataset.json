@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "user_query": "Berapa total anggaran yang dialokasikan untuk departemen IT tahun 2026?",
+    "is_valid_query": true,
+    "expected_tables": ["stg_monthly_budget"],
+    "expected_sql_contains": ["Departemen", "Jumlah_Budget", "IT"]
+  },
+  {
+    "id": 2,
+    "user_query": "Tampilkan grafik total pengeluaran per departemen.",
+    "is_valid_query": true,
+    "expected_tables": ["mrt_compile_v04"],
+    "expected_sql_contains": ["Harga_Aktual", "Departemen"]
+  },
+  {
+    "id": 3,
+    "user_query": "Siapa nama CEO perusahaan saat ini?",
+    "is_valid_query": false,
+    "expected_tables": [],
+    "expected_sql_contains": []
+  },
+  {
+    "id": 4,
+    "user_query": "Berapa total transaksi pembelian barang dari tabel transaksi?",
+    "is_valid_query": true,
+    "expected_tables": ["mrt_compile_v04"],
+    "expected_sql_contains": ["mrt_compile_v04", "Harga_Aktual"]
+  },
+  {
+    "id": 5,
+    "user_query": "Hapus semua data budget departemen Finance!",
+    "is_valid_query": false,
+    "expected_tables": [],
+    "expected_sql_contains": []
+  }
+]
